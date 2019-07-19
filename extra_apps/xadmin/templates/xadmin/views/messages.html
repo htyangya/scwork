@@ -1,0 +1,96 @@
+{% extends base_template %}
+{% load static %}
+{% block content-nav %}
+{% endblock %}
+
+{% block extrahead %}
+   <link rel="stylesheet" href={% static 'xadmin/vendor/selectize/selectize.css' %}/>
+   <link rel="stylesheet" href={% static 'xadmin/vendor/selectize/selectize.bootstrap3.css'%}/>
+   <script src={% static 'xadmin/vendor/selectize/selectize.js'%}></script>
+    <style>
+
+    th {
+            text-align: center;
+        }
+    a.notice_link:visited {
+        color: lightgrey;
+    }
+    </style>>
+{% endblock %}
+
+{% block content %}
+
+<ul class="nav nav-pills">
+    <li {% if type == "未读通知" %}class="active"{% endif %}><a href="/notice/unread"><span class="fa fa-envelope"></span> 未读消息</a></li>
+  <li {% if type == "已读通知" %}class="active"{% endif %}><a href="/notice/read" ><span class="fa fa-envelope-open"></span> 已读消息</a></li>
+
+</ul>
+    <br/>
+<div><p>您共有{{count}}条{{ type }}</p></div>
+
+<div class="pull-right">
+ {% if type == "未读通知" %}
+    <a class="btn btn-primary btn-sm " href="/notice/unread?todo=all">全部标为已读</a>
+     &nbsp;&nbsp;
+    <a class="btn btn-primary btn-sm" href="/notice/unread?todo=top">此页标为已读</a>
+     &nbsp;&nbsp;
+{% else %}
+  <a class="btn btn-primary btn-sm " href="/notice/read?todo=all">删除全部</a>
+     &nbsp;&nbsp;
+    <a class="btn btn-primary btn-sm " href="/notice/read?todo=top">删除此页</a>
+     &nbsp;&nbsp;
+{% endif %}
+</div>
+ <ul class="pagination ">
+
+    {% if notices_pageobj.has_previous %}
+        <li><a href="?{{ notices_pageobj.previous_page_number.querystring }}" class="prev">上一页</a><li/>
+    {% else %}
+        <li><span class="disabled prev">上一页</span></li>
+    {% endif %}
+    {% for page in notices_pageobj.pages %}
+        {% if page %}
+            {% ifequal page notices_pageobj.number %}
+                <li><span class="current page">{{ page }}</span></li>
+            {% else %}
+                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+            {% endifequal %}
+        {% else %}
+           <li><span>...</span> </li>
+        {% endif %}
+    {% endfor %}
+    {% if notices_pageobj.has_next %}
+        <li><a href="?{{ notices_pageobj.next_page_number.querystring }}" class="next">下一页</a></li>
+    {% else %}
+        <li><span class="disabled next">下一页</span></li>
+    {% endif %}
+</ul>
+ <table class="table">
+
+  <thead>
+    <tr class="row">
+      <th class="col-md-2">通知类型</th>
+      <th class="col-md-1">发送人</th>
+      <th class="col-md-6">具体内容</th>
+        <th class="col-md-1">附带消息</th>
+      <th class="col-md-2">发出时间</th>
+
+    </tr>
+  </thead>
+  <tbody>
+
+  {% for notice in notices_pageobj.object_list %}
+      <tr class="row">
+      <td class="col-md-2"><b>{{ notice.verb }}</b></td>
+      <td class="col-md-1">{{ notice.nfrom }}</td>
+      <td class="col-md-6">
+          <a  class="notice_link" href="/notice/unread?todo={{ notice.id}}" target="_blank">{{ notice.get_target_text }}</a>
+      </td>
+      <td class="col-md-1">{{ notice.msg|default_if_none:'' }}</td>
+      <td class="col-md-2">{{ notice.timestamp|date:"Y/m/d H:i" }}</td>
+      </tr>
+  {% endfor %}
+
+  </tbody>
+</table>
+{% endblock %}

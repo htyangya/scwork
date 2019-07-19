@@ -1,0 +1,129 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% load xadmin_tags %}
+{% load crispy_forms_tags %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} detail{% endblock %}
+
+{% block nav_title %}
+  {% if model_icon %}<i class="{{model_icon}}"></i> {% endif %}{{ object|truncatewords:"18" }}
+{% endblock %}
+
+{% block nav_toggles %}
+{% include "xadmin/includes/toggle_back.html" %}
+{% if has_change_permission %}
+<a href="{% url opts|admin_urlname:'change' object.pk %}" class="navbar-toggle pull-right"><i class="fa fa-pencil"></i></a>
+{% endif %}
+{% if has_delete_permission %}
+<a href="{% url opts|admin_urlname:'delete' object.pk %}" class="navbar-toggle pull-right"><i class="fa fa-trash-o"></i></a>
+{% endif %}
+{% endblock %}
+
+{% block nav_btns %}
+  {% if has_change_permission %}
+  <a href="{% url opts|admin_urlname:'change' object.pk %}" class="btn btn-primary"><i class="fa fa-pencil"></i> <span>{% trans "Edit" %}</span></a>
+  {% endif %}
+  {% if has_delete_permission %}
+  <a href="{% url opts|admin_urlname:'delete' object.pk %}" class="btn btn-danger"><i class="fa fa-trash-o"></i> <span>{% trans "Delete" %}</span></a>
+  {% endif %}
+{% endblock %}
+{% block extrahead %}
+    <link rel="stylesheet" href={% static 'xadmin/vendor/jquery-ui/jquery-ui.min.css' %} />
+    <style>
+        th {
+            text-align: center;
+        }
+        .notify_talbe *{
+            font-size: 11px;
+            color: #122b40;
+            text-align: center;
+        }
+        .unread *{
+            color: green;
+        }
+
+    </style>
+{% endblock %}
+{% block script %}
+{% if btns %}
+     <script src={% static 'xadmin/vendor/jquery-ui/jquery-ui.min.js' %}></script>
+      <div id="dialog" title="请确认选择" class="ui-widget">
+     <br/>
+     <h4 class="text-info"></h4>
+      <br/><br/>
+    </div>
+    <script src="{% static 'xadmin/js/xadmin.utils.detail_buttons.js' %}"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if btns %}
+<div class="container " style="width:100%;">
+  <div class="row well well-sm navbar-static-top">
+ <div class="btn-toolbar col-md-offset-2 col-md-8 text-center">
+    {% for btn in btns %}
+        {% if btn.candialog %}
+        <input  type="submit" class="btn btn-primary" value="{{ btn.text }}" d_title="{{ btn.d_title }}"
+        d_text="{{ btn.d_text }}"
+                    d_hasper="{{ btn.d_hasper }}" has_msg="{{ btn.has_msg }}"
+                    {% if btn.d_hasper %}
+                        d_url="{{ btn.d_url }}"
+                    {% endif %}
+                    onclick="btns_click(this)"
+        />
+         {% else %}
+          <a class="btn btn-primary" href="{{ btn.d_url }}">{{ btn.text }}</a>
+        {% endif %}
+        &nbsp;&nbsp;
+    {% endfor %}
+</div></div></div>
+{% endif %}
+{% if notifies %}
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <i class="icon fa fa-chevron-up chevron"></i>
+            <h3 class="panel-title">推送消息</h3>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <table class="table notify_talbe">
+          <thead>
+            <tr class="row">
+              <th class="">通知类型</th>
+              <th class="">通知状态</th>
+              <th class="">发送人</th>
+              <th class="">接收人</th>
+                <th class="">附带消息</th>
+              <th class="">发出时间</th>
+              <th class="">阅读时间</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          {% for notice in notifies %}
+              <tr class="row {% if notice.status != '已读' %}
+                unread
+              {% endif %}" >
+              <td class=""><b>{{ notice.verb }}</b></td>
+              <td class=""><b>{{ notice.status }}</b></td>
+              <td class="">{{ notice.nfrom }}</td>
+              <td class="">{{ notice.recipient }}</td>
+
+              <td class="">{{ notice.msg|default_if_none:'' }}</td>
+              <td class="">{{ notice.timestamp|date:"Y/m/d H:i" }}</td>
+              <td class="">{{ notice.readedstamp|date:"Y/m/d H:i" }}</td>
+              </tr>
+          {% endfor %}
+
+          </tbody>
+        </table>
+
+    </div>
+</div>
+{% endif %}
+  {% view_block 'before_fieldsets' %}
+  {% crispy form %}
+  {% view_block 'after_fieldsets' %}
+{% endblock %}

@@ -1,0 +1,38 @@
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="model_title" aria-hidden="true">
+    <div class="modal-dialog modal-lg " style="width:100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="model_title">请选择具体人员</h4>
+            </div>
+            <div class="modal-body" id="model_body">
+                <div class="row col-md-offset-1 col-md-3">
+                    <p id="re-text" class="text-left"> <small></small><p>
+                    <button type="button" class="btn btn-default query q-search" onclick="query_and_load('normal')">查看全部</button>&nbsp;&nbsp;
+                    <button type="button" class="btn btn-default query q-search" onclick="query_and_load('only_multi')">只看多专业</button>&nbsp;&nbsp;
+                    <button type="button" class="btn btn-default query q-search" onclick="query_and_load('reverse')">查看不可用</button>
+                </div>
+                <br/>
+                <div class="row col-md-8 col-md-offset-2">
+                    <form role="form">
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">人才筛选栏</label>
+                            <div class="col-sm-10" style="max-width: 100%">
+                                <select id="choose" class=" form-control choose" multiple style="max-width: 100%">
+
+                                </select>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+
+                <br><br><br><br><br><br><br><br><br><br>
+            </div>
+            <div class="modal-footer" id="model_footer">
+                <button type="button" id="btn-reset" class="btn btn-primary query q-set" disabled onclick="to_activeselect(1)">覆盖当前人才库</button>&nbsp;&nbsp;
+                <button type="button" id="btn-add" class="btn btn-primary query q-set" disabled onclick="to_activeselect(0)">追加到人才库</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
