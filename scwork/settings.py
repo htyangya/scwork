@@ -100,19 +100,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'scwork.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-import pymysql         # 一定要添加这两行！通过pip install pymysql！
+import pymysql         
 pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sccrm',
-        'HOST': '152.136.146.28' if DEBUG else '127.0.0.1',
-        'USER': 'sccrm',
-        'PASSWORD': 'JIANGkui1',
+        'NAME': '',
+        'HOST': '',
+        'USER': '',
+        'PASSWORD': '',
         'PORT': '3306',
     }
 }
@@ -163,15 +161,15 @@ MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 #邮件服务器设置
 EMAIL_HOST = 'smtp.139.com'                   #SMTP地址
 EMAIL_PORT = 465                                #SMTP端口
-DEFAULT_FROM_EMAIL = '15285649038@139.com'       #用户收到邮件显示的邮箱
-EMAIL_HOST_USER = '15285649038@139.com'       #我自己的邮箱
-EMAIL_HOST_PASSWORD = 'JIANGkui1'                  #我的邮箱密码
+DEFAULT_FROM_EMAIL = ''       #用户收到邮件显示的邮箱
+EMAIL_HOST_USER = ''       #我自己的邮箱
+EMAIL_HOST_PASSWORD = ''                  #我的邮箱密码
 EMAIL_SUBJECT_PREFIX = u'[sccrm]'            #为邮件Subject-line前缀,默认是'[django]'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True                             #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 ##管理员站点
 
-SERVER_EMAIL = '979734716@qq.com'
+SERVER_EMAIL = ''
 
 # LOGGING = {
 #     'version': 1,
